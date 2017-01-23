@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         Button runGameButton = (Button) findViewById(R.id.run_button);
 
         final EditText numberOfGamesEditText = (EditText) findViewById(R.id.experiment_number_edittext);
+        numberOfGamesEditText.setSelection(numberOfGamesEditText.getText().length());
 
         View clearButton = findViewById(R.id.clear_button);
         clearButton.setOnClickListener(new View.OnClickListener() {
