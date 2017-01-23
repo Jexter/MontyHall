@@ -27,14 +27,11 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            //Thread.sleep(1000);
-
             setupGames();
             playAllGamesStickingToSameChest();
 
             setupGames();
             playAllGamesAndChangeChests();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +42,7 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
     private void playAllGamesAndChangeChests() {
         for (Game game : mGames) {
             game.chooseAChestAtRandom();
-            game.openAnEmptyChest();
+            game.openAnEmptyUnchosenChest();
             game.changeChosenChest();
 
             boolean foundGold = game.doesChosenChestContainGold();
@@ -59,7 +56,7 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
     private void playAllGamesStickingToSameChest() {
         for (Game game : mGames) {
             game.chooseAChestAtRandom();
-            game.openAnEmptyChest();
+            game.openAnEmptyUnchosenChest();
             game.doNotChangeChosenChest();
 
             boolean foundGold = game.doesChosenChestContainGold();

@@ -8,7 +8,7 @@ public class Chest {
     private boolean mContainsGold = false;
     private boolean mOpened = false;
 
-    public void setContainsGold() {
+    public void putSomeGoldIn() {
         mContainsGold = true;
     }
 

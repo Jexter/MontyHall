@@ -18,7 +18,7 @@ public class Game {
 
         int numberOfChestToContainGold = (int) (Math.random() * (double) NUMBER_OF_CHESTS_IN_GAME);
 
-        chests.get(numberOfChestToContainGold).setContainsGold();
+        chests.get(numberOfChestToContainGold).putSomeGoldIn();
     }
 
     public void chooseAChestAtRandom() {
@@ -30,7 +30,7 @@ public class Game {
         // :)
     }
 
-    public void openAnEmptyChest() {
+    public void openAnEmptyUnchosenChest() {
         for (Chest chest : chests) {
             if (!chest.containsGold() && chest != mChosenChest) {
                 chest.open();
@@ -46,8 +46,7 @@ public class Game {
             }
         }
 
-        // If this happens, either the player hasn't chosen any chest or all the chests have been
-        // opened already :-O
+        // If this happens the player hasn't chosen any chest or there's no gold in any of them
         return false;
     }
 
