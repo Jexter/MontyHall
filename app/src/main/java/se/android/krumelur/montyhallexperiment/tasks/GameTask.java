@@ -4,38 +4,72 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-public class GameTask extends AsyncTask<String, String, String> {
+import java.util.ArrayList;
+
+import se.android.krumelur.montyhallexperiment.model.Game;
+
+public class GameTask extends AsyncTask<Void, Void, Void> {
 
     ProgressDialog progressDialog;
     Context mContext;
     private GameCallback mGameCallback;
+    private int mNumberOfGames;
+    private ArrayList<Game> mGames = new ArrayList<>();
+    private int mGamesWonWithoutChangingChest = 0;
+    private int mGamesWonByChangingChest = 0;
 
-    public GameTask(Context context, GameCallback gameCallback) {
+    public GameTask(Context context, GameCallback gameCallback, int numberOfGames) {
         mContext = context;
         mGameCallback = gameCallback;
+        mNumberOfGames = numberOfGames;
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected Void doInBackground(Void... params) {
         try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            //Thread.sleep(1000);
+
+            setupGames();
+            playAllGamesStickingToSameChest();
+/*
+            setupGames();
+            playAllGamesAndChangeChests();
+*/
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "Done";
+        return null;
     }
 
+    private void playAllGamesStickingToSameChest() {
+        for (Game game : mGames) {
+            game.chooseAChestAtRandom();
+            game.openAnEmptyChest();
+            game.doNotChangeChosenChest();
+
+            boolean foundGold = game.doesChosenChestContainGold();
+
+            if (foundGold) {
+                mGamesWonWithoutChangingChest++;
+            }
+
+        }
+    }
+
+    private void setupGames() {
+        for (int i = 0; i < mNumberOfGames; i++) {
+            mGames.add(new Game());
+        }
+    }
 
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(Void result) {
         // execution of result of Long time consuming operation
         progressDialog.dismiss();
-        mGameCallback.gameComplete();
+        mGameCallback.gameComplete(mGamesWonWithoutChangingChest);
     }
-
 
     @Override
     protected void onPreExecute() {
@@ -44,12 +78,7 @@ public class GameTask extends AsyncTask<String, String, String> {
                 "Calculating");
     }
 
-
-    @Override
-    protected void onProgressUpdate(String... text) {
-    }
-
     public interface GameCallback {
-        void gameComplete();
+        void gameComplete(int numberOfGames);
     }
 }
