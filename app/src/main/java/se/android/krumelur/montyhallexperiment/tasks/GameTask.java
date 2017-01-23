@@ -31,16 +31,29 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
 
             setupGames();
             playAllGamesStickingToSameChest();
-/*
+
             setupGames();
             playAllGamesAndChangeChests();
-*/
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return null;
+    }
+
+    private void playAllGamesAndChangeChests() {
+        for (Game game : mGames) {
+            game.chooseAChestAtRandom();
+            game.openAnEmptyChest();
+            game.changeChosenChest();
+
+            boolean foundGold = game.doesChosenChestContainGold();
+
+            if (foundGold) {
+                mGamesWonByChangingChest++;
+            }
+        }
     }
 
     private void playAllGamesStickingToSameChest() {
@@ -54,11 +67,12 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
             if (foundGold) {
                 mGamesWonWithoutChangingChest++;
             }
-
         }
     }
 
     private void setupGames() {
+        mGames.clear();
+
         for (int i = 0; i < mNumberOfGames; i++) {
             mGames.add(new Game());
         }
@@ -68,7 +82,7 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void result) {
         // execution of result of Long time consuming operation
         progressDialog.dismiss();
-        mGameCallback.gameComplete(mGamesWonWithoutChangingChest);
+        mGameCallback.gameComplete(mNumberOfGames, mGamesWonWithoutChangingChest, mGamesWonByChangingChest);
     }
 
     @Override
@@ -79,6 +93,6 @@ public class GameTask extends AsyncTask<Void, Void, Void> {
     }
 
     public interface GameCallback {
-        void gameComplete(int numberOfGames);
+        void gameComplete(int numberOfGames, int goldFoundWithoutChangingChest, int goldFoundByChangingChest);
     }
 }

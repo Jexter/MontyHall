@@ -50,4 +50,15 @@ public class Game {
         // opened already :-O
         return false;
     }
+
+    public void changeChosenChest() {
+        for (Chest chest : chests) {
+            if (chest != mChosenChest) {
+                if (!chest.opened()) {
+                    mChosenChest = chest;
+                    return;
+                }
+            }
+        }
+    }
 }
